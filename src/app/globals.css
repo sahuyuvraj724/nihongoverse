@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/*
+  NihongoVerse design tokens (Tailwind CSS v4 theme).
+  Dark mode is the default and only theme in Phase 1.
+  Palette: midnight-purple/navy base, sakura-pink + violet accents.
+*/
+@theme {
+  --color-midnight: #0b0918; /* page background */
+  --color-panel: #141126; /* card / panel background */
+  --color-panel-2: #1d1833; /* raised panel background */
+  --color-line: #2c2450; /* borders */
+  --color-sakura: #ff9ebb; /* primary accent */
+  --color-sakura-soft: #f9a8d4; /* secondary pink accent */
+  --color-violet-glow: #8b5cf6; /* violet accent */
+  --color-violet-deep: #6d28d9;
+  --color-ink: #f2edff; /* main text — high contrast on midnight */
+  --color-muted: #b3a9d6; /* secondary text — still readable on midnight */
+  --color-faint: #7f76a3; /* captions only, never body text */
+}
+
+/* next/font variables land on <html>; wire them into the theme utilities. */
+@theme inline {
+  --font-sans: var(--font-jp);
+  --font-display: var(--font-displayface);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-midnight);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Soft ambient background glow used behind hero sections. */
+.bg-aurora {
+  background:
+    radial-gradient(
+      42rem 22rem at 15% -5%,
+      rgba(139, 92, 246, 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      36rem 20rem at 90% 10%,
+      rgba(255, 158, 187, 0.12),
+      transparent 60%
+    ),
+    var(--color-midnight);
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Visible focus ring for keyboard users (accessibility). */
+:focus-visible {
+  outline: 2px solid var(--color-sakura);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgba(255, 158, 187, 0.35);
+}

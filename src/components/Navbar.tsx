@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import AuthButtons from "@/components/AuthButtons";
 
 /* Site navigation. Sticky top bar + a mobile menu that opens/closes.
    Links: Home, Courses, Pricing, About, Contact. */
@@ -59,14 +60,9 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Desktop CTA */}
+        {/* Desktop CTA — auth-aware */}
         <div className="hidden md:block">
-          <Link
-            href="/courses"
-            className="rounded-full bg-gradient-to-r from-sakura to-sakura-soft px-5 py-2.5 font-display text-sm font-semibold text-midnight transition-transform hover:-translate-y-0.5"
-          >
-            Start Learning
-          </Link>
+          <AuthButtons />
         </div>
 
         {/* Mobile hamburger */}
@@ -109,13 +105,7 @@ export default function Navbar() {
               </li>
             ))}
             <li className="pt-2">
-              <Link
-                href="/courses"
-                onClick={() => setOpen(false)}
-                className="block rounded-full bg-gradient-to-r from-sakura to-sakura-soft px-5 py-3 text-center font-display font-semibold text-midnight"
-              >
-                Start Learning
-              </Link>
+              <AuthButtons onNavigate={() => setOpen(false)} />
             </li>
           </ul>
         </div>

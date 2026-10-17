@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
@@ -69,9 +70,9 @@ export default function CoursesPage() {
                 {level.status === "in-development" ? (
                   <p className="text-sm text-faint">
                     Lessons are being written now. Try the{" "}
-                    <a href="/#sample-lesson" className="text-sakura underline">
+                    <Link href="/#sample-lesson" className="text-sakura underline">
                       free sample lesson
-                    </a>{" "}
+                    </Link>{" "}
                     on the homepage meanwhile.
                   </p>
                 ) : (

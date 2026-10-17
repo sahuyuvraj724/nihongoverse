@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
@@ -43,17 +43,28 @@ function buildQuestions(): Question[] {
 }
 
 export default function SampleQuiz() {
-  const [questions, setQuestions] = useState<Question[]>(() => buildQuestions());
+  // Questions are built after mount (in useEffect), because Math.random()
+  // is not allowed during Next.js static prerendering.
+  const [questions, setQuestions] = useState<Question[] | null>(null);
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
 
-  const q = questions[index];
-  const isLast = index === questions.length - 1;
+  // Questions are built after mount (in useEffect), because Math.random()
+  // is not allowed during Next.js static prerendering.
+  // The eslint-disable below is intentional: this effect runs once on mount,
+  // sets state exactly once, and cannot cascade.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setQuestions(buildQuestions());
+  }, []);
+
+  const q = questions ? questions[index] : null;
+  const isLast = questions ? index === questions.length - 1 : false;
 
   const pick = (romaji: string) => {
-    if (picked !== null) return; // lock answer once picked
+    if (picked !== null || !q) return; // lock answer once picked
     setPicked(romaji);
     if (romaji === q.romaji) setScore((s) => s + 1);
   };
@@ -68,15 +79,16 @@ export default function SampleQuiz() {
   };
 
   const restart = () => {
-    setQuestions(buildQuestions());
+    setQuestions(buildQuestions()); // event handler — allowed here
     setIndex(0);
     setPicked(null);
     setScore(0);
     setDone(false);
   };
 
+  const total = questions?.length ?? KANA.length;
   const resultMessage =
-    score === questions.length
+    score === total
       ? "Perfect! すごい！ You are ready for the full N5 kana course."
       : score >= 3
         ? "Nice work! A little more practice and あ行 is yours."
@@ -93,7 +105,20 @@ export default function SampleQuiz() {
       <div className="mx-auto max-w-xl">
         <Card>
           <AnimatePresence mode="wait">
-            {!done ? (
+            {!questions ? (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="py-16 text-center"
+              >
+                <p className="text-5xl" aria-hidden="true">
+                  🌸
+                </p>
+                <p className="mt-4 text-muted">Preparing your quiz…</p>
+              </motion.div>
+            ) : !done && q ? (
               <motion.div
                 key={`q-${index}`}
                 initial={{ opacity: 0, x: 24 }}

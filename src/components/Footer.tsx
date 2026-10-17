@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CurrentYear from "@/components/CurrentYear";
 
 /* Site footer: brand, quick links, course links, legal links. */
 
@@ -94,7 +95,7 @@ export default function Footer() {
 
       <div className="border-t border-line/60">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-faint sm:flex-row sm:px-6">
-          <p>© {new Date().getFullYear()} NihongoVerse. All rights reserved.</p>
+          <p>© <CurrentYear /> NihongoVerse. All rights reserved.</p>
           <p>Built with care in India 🇮🇳 — 桜</p>
         </div>
       </div>
